@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <name>Neighborhood Map Project</name>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" media="(max-width: 670px)" href="css/responsive.css">
+</head>
+<body>
+    <style>
+        * {box-sizing:border-box;}
+        *:visited {color: #7D7D7D}
+        body {background-color: #CCC; color: #7D7D7D;}
+        html, body, #map {width: 100%; height: 100%; z-index: 1; position: absolute; margin: 0;}
+        p {font-size: 12px; margin: 5px 0;}
+        strong {font-size: 14px;}
+        ul {list-style-type: none; padding-left: 0; margin-bottom: 0;}
+        li {font-family: Helvetica, sans-serif; padding: 20px 0 15px 15px;}
+        li:hover {background-color: #7D7D7D; color: white;}
+        a {text-decoration: none; color: #7D7D7D;}
+        hr { margin: 10px 0 0 0; color: orange; border-color: orange;}
+    </style>
+    <div id="map"></div>
+    <div id="search-container">
+        <div id="search-nav">    
+            <input id="input" placeholder="Search…" type="input" data-bind="textInput: query, valueUpdate: 'keydown'" autocomplete="off"></input>
+            <div id="scroller">
+                <ul data-bind="template: {name: 'location', foreach:locations}">
+                </ul>
+                <script type="text/html" id="location">
+                    <div data-bind="visible: visible">
+                        <!--<a href="#" data-bind="attr: {id: id}">-->
+                            <li>
+                                <strong data-bind="text: name"></strong>
+
+                            </li>
+                        <!--</a>-->
+                    </div>
+                </script>    
+            </div>
+        </div> 
+
+    </div>
+
+
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="js/lib/knockout-3.3.0.js"></script>
+    <script async type="text/javascript" src="js/script.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUqhytFWXa-EVevOfK6LGHl3qMDF8J9mY&libraries=places&callback=initMap" async
+            defer></script>
+</body>
+</html>
