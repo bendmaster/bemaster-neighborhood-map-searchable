@@ -1,5 +1,4 @@
 var map;
-var locations = [];
 var markers = [];
 var foursquare = '';
 
@@ -102,8 +101,8 @@ function initMap() {
     //Determines if locations should be visible
     //This function is passed in the knockout viewModel function
     function placeMaps() {
-        for (var i = 0; i < locations.length; i++) {
-            if (locations[i].test === true) {
+        for (var i = 0; i < viewModel.places().length; i++) {
+            if (viewModel.places()[i].test === true) {
                 markers[i].setVisible(true);
             } else {
                 markers[i].setVisible(false);
@@ -122,7 +121,7 @@ function addLocation(place) {
     location.rating = place.rating;
     location.visible = ko.observable(true);
     location.test = true;
-    locations.push(location);
+    viewModel.places.push(location);
     console.log("pushed: " + location);
 }
 
@@ -214,25 +213,34 @@ function getFoursquare(point) {
 //the viewModel searches through the locations array and displays only the elements matching the search both in the
 // list and on the map
 var viewModel = {
-    query: ko.observable('')
+    filter: ko.observable(''),
+    places: ko.observableArray(),
+    clear: function(){
+        this.filter(' ');
+    }
 };
 
 
 //the locations property of the viewModel is an array that filters the global array locations and sets the visibility
 // on the map to true if it matches the criteria of the search
-viewModel.locations = ko.computed(function () {
+
+viewModel.filteredItems = ko.computed(function() {
     var self = this;
-    var search = self.query().toLowerCase();
-    return ko.utils.arrayFilter(locations, function (marker) {
-        if (marker.name.toLowerCase().indexOf(search) >= 0) {
-            marker.test = true;
-            return marker.visible(true);
-        } else {
-            marker.test = false;
-            placeMaps();
-            return marker.visible(false);
-        }
-    });
+    var filter = self.filter().toLowerCase();
+    if (!filter) {
+        return self.places();
+    } else {
+        return ko.utils.arrayFilter(self.places(), function(place) {
+            if (place.name.toLowerCase().indexOf(filter) >= 0) {
+                place.test = true;
+                return place.visible(true);
+            } else {
+                place.test = false;
+                placeMaps();
+                return place.visible(false);
+            }
+        }, filter);
+    }
 }, viewModel);
 
 ko.applyBindings(viewModel);
