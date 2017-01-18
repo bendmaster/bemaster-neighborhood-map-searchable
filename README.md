@@ -1,23 +1,34 @@
-<strong>Udacity Neighborhood Map: Project 5</strong><br/>
-By: Daniel Botta
+#GreenLake Seattle Neighborhood Map Project
+Inspired by my moving to this location, I have created an application using the Knockout.js framework to display local bars along with information relevant to each bar. Additionally, users can search the map using an input field located on the left side.
 
-Follow the link to open the project:
-http://dsbotta.github.io/Neighborhood-Map
+##How does it work?
+The application utilizes the following library:
 
-Basic Description
-This project is SAP using Google Maps API to display the Washington DC area.<br/>
-The markers display many of the monuments and main attractions of the Washington DC area. <br/>
-<br/>
-<strong>Functionality of the page includes:</strong> <br/> 
-	An interactive navigation bar to filter map and navigation bar results using knockout.js, <br/>
-	Display of the current Washington DC weather forecast using Weather Underground API, <br/>
-	Display of Flickr images within the Washington DC National Mall, <br/>
-		-all images are displayed in a modal upon a click handler with scroll functionality<br/>
-	A reset map button, <br/>
-	Responsive design giving the SAP the ability to be used and viewed on all web modern browsing devices
+1. Bootstrap
+  * Provides styling for the project
 
-<strong>Sources:</strong><br/>
-http://knockoutjs.com/documentation/introduction.html<br/>
-http://api.jquery.com/<br/>
-http://www.w3schools.com/
+The application also uses the following APIs:
+
+1. Google Maps API
+  * This API provides the functionality for generating the map as well as the markers used to indicate points of interest
+2. Foursquare API
+  * This API pulls information relevant to each location
+
+Finally, the application uses the Knockout.js framework to provide a MVVM separation of concerns
+
+##How do I use it?
+Click on index.html in the provided file to run the application. The application was designed for Chrome but also works on other modern browsers (Firefox, Edge, etc.).
+
+For optimal viewing experience, a desktop is preferred. However, this application can be viewed and operated as normal using a variety of devices
+
+A list of 10 bars in the GreenLake area are displayed. To filter the bars, start typing any of the letters contained within the name of the bar.
+
+##Resources
+* [Google Maps API](https://developers.google.com/maps/documentation/javascript)
+* [Knockout.js](http://knockoutjs.com/documentation/introduction.html)
+* [Boostrap](http://getbootstrap.com/)
+* [Foursquare API](https://developer.foursquare.com/)
+
+##Credit
+The styling for the map is from a chapter in a book I have called [Javascript & jQuery](http://javascriptbook.com/) by Jon Duckett
 

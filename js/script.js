@@ -75,8 +75,17 @@ function initMap() {
         type: ['bar']
     }, callback);
 
+    //callback function checks to see if Places API is functioning properly.
+    //If it isn't, returns error and notifies user
+    //Otherwise it creates 10 markers
+
     function callback(results, status) {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
+        if (status !== google.maps.places.PlacesServiceStatus.OK) {
+            console.error(status);
+            alert("Google Maps was unable to load. Please check your internet connection and try re-loading the page.");
+
+
+        } else {
             for (var i = 0; i < 10; i++) {
                 var place = results[i];
                 addLocation(place);
@@ -86,25 +95,23 @@ function initMap() {
     }
 
 
-
-    setAllMap();
+    placeMaps();
 
 }
 
-//Determines if locations should be visible
-//This function is passed in the knockout viewModel function
-function setAllMap() {
-  for (var i = 0; i < locations.length; i++) {
-    if(locations[i].boolTest === true) {
-        markers[i].setVisible(true);
-    } else {
-        markers[i].setVisible(false);
+    //Determines if locations should be visible
+    //This function is passed in the knockout viewModel function
+    function placeMaps() {
+        for (var i = 0; i < locations.length; i++) {
+            if (locations[i].test === true) {
+                markers[i].setVisible(true);
+            } else {
+                markers[i].setVisible(false);
+            }
+        }
     }
-  }
-}
 
-
-
+//this function pushes the generated locations from the Places API into the array locations
 function addLocation(place) {
 
     var location = {};
@@ -114,14 +121,12 @@ function addLocation(place) {
     location.vicinity = place.vicinity;
     location.rating = place.rating;
     location.visible = ko.observable(true);
-    location.boolTest = true;
+    location.test = true;
     locations.push(location);
     console.log("pushed: " + location);
 }
 
-//Information about the different locations
-//Provides information for the locations
-
+//similar to the addLocation function but pushes corresponding markers to the map
 
 function createMarker(place) {
 
@@ -145,13 +150,10 @@ function createMarker(place) {
 
 }
 
+//clickMarker function waits for the Foursquare API to run then produces an infowindow above the desired marker on the
+// map with relevant information
 function clickMarker(place) {
-    getFoursquare(place);
-    console.log("Clicking...")
-
-    //this timeout function gives the foursquare API a bit of time to retrieve the JSON data
-
-    setTimeout(function () {
+    getFoursquare(place).always(function () {
         var marker;
 
         for (var i = 0; i < markers.length; i++) {
@@ -167,17 +169,18 @@ function clickMarker(place) {
         marker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function () {
             marker.setAnimation(null);
-        }, 1450);
-    }, 300);
+        }, 1400);
+    });
+
 }
 
 function getFoursquare(point) {
     // foursquare api url
     var foursquareURL = 'https://api.foursquare.com/v2/venues/search?client_id=NONCPLRWZOOGK1CXCJUTJM2J5KWAXNW1F2135GWMLHQIL2LB&client_secret=5GYN3U3I0TM3JLPDB5P4DQW2X0NZNJCL1O2AXTFIJ0Y2ICE5&v=20170111&ll=47.680677,-122.323503&query=\'' + point['name'] + '\'&limit=10';
 
-    // retrievies the JSON from the foursquare URL and provides the phone number and twitter account, if available of each location
-    $.getJSON(foursquareURL).done(function (response) {
-        foursquare = '';
+    // returns the JSON from the foursquare URL and provides the phone number and twitter account, if available of each location
+    return $.getJSON(foursquareURL).done(function (response) {
+        foursquare = '<strong>Foursquare Info: </strong><br>';
         var venue = response.response.venues[0];
 
         //functions normally if data is retrieved about the location but, if no data is available, runs the else statement
@@ -208,22 +211,25 @@ function getFoursquare(point) {
 }
 
 
-//Query through the different locations from nav bar with knockout.js
-    //only display locations and nav elements that match query result
+//the viewModel searches through the locations array and displays only the elements matching the search both in the
+// list and on the map
 var viewModel = {
     query: ko.observable('')
 };
 
-viewModel.locations = ko.dependentObservable(function() {
+
+//the locations property of the viewModel is an array that filters the global array locations and sets the visibility
+// on the map to true if it matches the criteria of the search
+viewModel.locations = ko.computed(function () {
     var self = this;
     var search = self.query().toLowerCase();
-    return ko.utils.arrayFilter(locations, function(marker) {
-    if (marker.name.toLowerCase().indexOf(search) >= 0) {
-            marker.boolTest = true;
+    return ko.utils.arrayFilter(locations, function (marker) {
+        if (marker.name.toLowerCase().indexOf(search) >= 0) {
+            marker.test = true;
             return marker.visible(true);
         } else {
-            marker.boolTest = false;
-            setAllMap();
+            marker.test = false;
+            placeMaps();
             return marker.visible(false);
         }
     });
@@ -231,8 +237,10 @@ viewModel.locations = ko.dependentObservable(function() {
 
 ko.applyBindings(viewModel);
 
-//show $ hide locations in sync with nav
-$("#input").keyup(function() {
-setAllMap();
+//shows and hides markers in sync with search.
+//also closes infowindows left open before searching
+$("#input").keyup(function () {
+    infowindow.close();
+    placeMaps();
 });
 
