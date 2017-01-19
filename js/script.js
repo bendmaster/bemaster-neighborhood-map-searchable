@@ -122,7 +122,6 @@ function addLocation(place) {
     location.visible = ko.observable(true);
     location.test = true;
     viewModel.places.push(location);
-    console.log("pushed: " + location);
 }
 
 //similar to the addLocation function but pushes corresponding markers to the map
@@ -214,11 +213,8 @@ function getFoursquare(point) {
 // list and on the map
 var viewModel = {
     filter: ko.observable(''),
-    places: ko.observableArray(),
-    clear: function(){
-        this.filter(' ');
-    }
-};
+    places: ko.observableArray()
+    };
 
 
 //the locations property of the viewModel is an array that filters the global array locations and sets the visibility
@@ -227,10 +223,9 @@ var viewModel = {
 viewModel.filteredItems = ko.computed(function() {
     var self = this;
     var filter = self.filter().toLowerCase();
-    if (!filter) {
-        return self.places();
-    } else {
-        return ko.utils.arrayFilter(self.places(), function(place) {
+    if (filter) {
+        console.log(filter);
+        return ko.utils.arrayFilter(self.places(), function (place) {
             if (place.name.toLowerCase().indexOf(filter) >= 0) {
                 place.test = true;
                 return place.visible(true);
@@ -240,6 +235,12 @@ viewModel.filteredItems = ko.computed(function() {
                 return place.visible(false);
             }
         }, filter);
+    } else {
+        self.places().forEach(function(place){
+            place.test = true;
+            place.visible(true);
+        });
+        return self.places();
     }
 }, viewModel);
 
@@ -248,7 +249,7 @@ ko.applyBindings(viewModel);
 //shows and hides markers in sync with search.
 //also closes infowindows left open before searching
 $("#input").keyup(function () {
-    infowindow.close();
     placeMaps();
+    infowindow.close();
 });
 

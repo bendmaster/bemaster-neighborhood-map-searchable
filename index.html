@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css?family=Bungee+Shade" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
 
 </head>
 <body>
@@ -18,19 +18,16 @@
         <aside class="col-xs-4">
             <div class="form-group">
                 <input id="input" placeholder="Search…" type="input" class="form-control"
-                                                data-bind="textInput: filter, valueUpdate: 'keydown'" autocomplete="off"></input>
+                                                data-bind="textInput: filter, valueUpdate: 'keyup'" autocomplete="off">
             </div>
-            <button data-bind="click: clear" class="btn btn-success form-control">Clear</button>
-
-
 
                 <ul data-bind="template: {name: 'location', foreach: filteredItems}" class="list-group">
                     </ul>
                     <script type="text/html" id="location">
                         <div data-bind="visible: visible">
 
-                            <li data-bind="click: clickMarker, text: name" class="list-group-item">
-
+                            <li data-bind="click: clickMarker" class="list-group-item">
+                                <strong data-bind="text: name"></strong>
                             </li>
 
                         </div>

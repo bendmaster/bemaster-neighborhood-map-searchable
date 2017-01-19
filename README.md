@@ -32,3 +32,5 @@ A list of 10 bars in the GreenLake area are displayed. To filter the bars, start
 ##Credit
 The styling for the map is from a chapter in a book I have called [Javascript & jQuery](http://javascriptbook.com/) by Jon Duckett
 
+Also a big thanks to this [article](http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html) from [http://www.knockmeout.net/](http://www.knockmeout.net/) for showing how to use the arrayFilter tool
+
