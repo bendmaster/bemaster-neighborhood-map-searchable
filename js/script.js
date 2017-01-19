@@ -2,6 +2,10 @@ var map;
 var markers = [];
 var foursquare = '';
 
+function mapsLoadIssue() {
+    alert("Google Maps was unable to load. Please check your internet connection and try re-loading the page.");
+}
+
 //Initialize the map and its contents
 function initMap() {
 
@@ -98,17 +102,17 @@ function initMap() {
 
 }
 
-    //Determines if locations should be visible
-    //This function is passed in the knockout viewModel function
-    function placeMaps() {
-        for (var i = 0; i < viewModel.places().length; i++) {
-            if (viewModel.places()[i].test === true) {
-                markers[i].setVisible(true);
-            } else {
-                markers[i].setVisible(false);
-            }
+//Determines if locations should be visible
+//This function is passed in the knockout viewModel function
+function placeMaps() {
+    for (var i = 0; i < viewModel.places().length; i++) {
+        if (viewModel.places()[i].test === true) {
+            markers[i].setVisible(true);
+        } else {
+            markers[i].setVisible(false);
         }
     }
+}
 
 //this function pushes the generated locations from the Places API into the array locations
 function addLocation(place) {
@@ -183,20 +187,9 @@ function getFoursquare(point) {
 
         //functions normally if data is retrieved about the location but, if no data is available, runs the else statement
         if (venue) {
-            var phone = venue.contact.formattedPhone;
-            if (phone !== undefined) {
-                foursquare += 'Phone: ' + phone + '<br>';
-            } else {
-                foursquare += 'Phone: Not Available' + '<br> ';
-            }
-
-            var twitter = venue.contact.twitter;
-            if (twitter !== undefined) {
-                foursquare += '<br>' + 'Twitter: @' + twitter;
-            }
-            else {
-                foursquare += '<br>' + 'Twitter: Not Available' + ' ';
-            }
+            var phone = venue.contact.formattedPhone, twitter = venue.contact.twitter;
+            phone !== undefined ? foursquare += 'Phone: ' + phone + '<br>' : foursquare += 'Phone: Not Available' + '<br> ';
+            twitter !== undefined ? foursquare += '<br>' + 'Twitter: @' + twitter : foursquare += '<br>' + 'Twitter: Not Available' + ' ';
         }
         else {
             foursquare += 'Foursquare unavailable';
@@ -213,14 +206,20 @@ function getFoursquare(point) {
 // list and on the map
 var viewModel = {
     filter: ko.observable(''),
-    places: ko.observableArray()
-    };
+    places: ko.observableArray(),
+    update: function () {
+        //shows and hides markers in sync with search.
+        //also closes infowindows left open before searching
+        placeMaps();
+        infowindow.close();
+    }
+};
 
 
 //the locations property of the viewModel is an array that filters the global array locations and sets the visibility
 // on the map to true if it matches the criteria of the search
 
-viewModel.filteredItems = ko.computed(function() {
+viewModel.filteredItems = ko.computed(function () {
     var self = this;
     var filter = self.filter().toLowerCase();
     if (filter) {
@@ -236,7 +235,7 @@ viewModel.filteredItems = ko.computed(function() {
             }
         }, filter);
     } else {
-        self.places().forEach(function(place){
+        self.places().forEach(function (place) {
             place.test = true;
             place.visible(true);
         });
@@ -246,10 +245,4 @@ viewModel.filteredItems = ko.computed(function() {
 
 ko.applyBindings(viewModel);
 
-//shows and hides markers in sync with search.
-//also closes infowindows left open before searching
-$("#input").keyup(function () {
-    placeMaps();
-    infowindow.close();
-});
 

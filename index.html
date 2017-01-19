@@ -12,41 +12,41 @@
 <body>
 <div class="container-fluid">
     <div class="row-fluid">
-        <header class="text-center header" id="title"><span>WELCOME TO GREENLAKE!</span><br><span>[bar crawl]</span></header>
+        <header class="text-center header" id="title"><span>WELCOME TO GREENLAKE!</span><br><span>[bar crawl]</span>
+        </header>
     </div>
     <div class="row-fluid">
         <aside class="col-xs-4">
             <div class="form-group">
-                <input id="input" placeholder="Search…" type="input" class="form-control"
-                                                data-bind="textInput: filter, valueUpdate: 'keyup'" autocomplete="off">
+                <input id="input" placeholder="Search…" class="form-control"
+                       data-bind="textInput: filter, valueUpdate: 'keyup', event: {keyup: update}" autocomplete="off">
             </div>
 
-                <ul data-bind="template: {name: 'location', foreach: filteredItems}" class="list-group">
-                    </ul>
-                    <script type="text/html" id="location">
-                        <div data-bind="visible: visible">
+            <ul data-bind="template: {name: 'location', foreach: filteredItems}" class="list-group">
+            </ul>
+            <script type="text/html" id="location">
+                <div data-bind="visible: visible">
 
-                            <li data-bind="click: clickMarker" class="list-group-item">
-                                <strong data-bind="text: name"></strong>
-                            </li>
+                    <li data-bind="click: clickMarker" class="list-group-item">
+                        <strong data-bind="text: name"></strong>
+                    </li>
 
-                        </div>
-                    </script>
-            </aside>
-
-
+                </div>
+            </script>
+        </aside>
 
 
         <main class="col-xs-8" id="map"></main>
     </div>
 </div>
 
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
-<script type="text/javascript" src="js/lib/knockout-3.3.0.js"></script>
-<script async type="text/javascript" src="js/script.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="js/lib/knockout-3.3.0.js"></script>
+<script src="js/script.js"></script>
 <script async
         defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUqhytFWXa-EVevOfK6LGHl3qMDF8J9mY&libraries=places&callback=initMap"
-        ></script>
+        onerror="mapsLoadIssue()"
+></script>
 </body>
 </html>
